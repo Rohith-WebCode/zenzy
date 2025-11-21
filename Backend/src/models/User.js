@@ -30,8 +30,8 @@ const userSchema  = new mongoose.Schema(
     },
 
     avatar: {
-      type: String, // Cloudinary image URL
-      default: "",  // optional for both
+      type: String, 
+      default: "",  
     },
 
     phone: {
@@ -48,4 +48,4 @@ const userSchema  = new mongoose.Schema(
 );
 
 
-export default mongoose.model("User",userSchema); 
+export default mongoose.model("User",userSchema);  
