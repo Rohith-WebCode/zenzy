@@ -95,3 +95,23 @@ export const userLogin = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+export const logoutUser = async(req,res)=>{
+  try {
+    res.cookie("token","",{
+      httpOnly:true,
+      secure:false,
+      sameSite:"strict",
+      expires:new Date(0)
+    })
+
+    res.status(200).json({
+      success: true,
+      message:"logout successful"
+    })
+  } catch (error) {
+    console.log("logout Error:", error.message);
+    res.status(500).json({ message: "Server error" });
+  }
+
+}
