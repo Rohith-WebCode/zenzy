@@ -115,3 +115,18 @@ export const logoutUser = async(req,res)=>{
   }
 
 }
+
+export const getMe = async(req,res)=>{
+    try {
+      res.status(201).json({
+        success:true,
+        user: req.user
+      })
+    } catch (error) {
+      res.status(401).json({
+        success:false,
+        message:"Server error"
+      })
+    }
+
+}
