@@ -130,3 +130,36 @@ export const getMe = async(req,res)=>{
     }
 
 }
+export const updateUser = async(req,res)=>{
+
+  try {
+    const user = await User.findById(req.user._id);
+
+    if(!user){
+       res.status(401).json({
+        success:false,
+        message:"user not found"
+      })
+    }
+
+    user.name = req.body.name || user.name
+    user.email = req.body.email || user.email
+    user.phone = req.body.phone || user.phone
+    user.address = req.body.address || user.address
+
+    const updatedUser  = await user.save()
+
+    res.status(201).json({
+      success:false,
+      user:updatedUser
+    })
+
+
+  } catch (error) {
+     res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+
+}
