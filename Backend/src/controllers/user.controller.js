@@ -136,7 +136,7 @@ export const updateUser = async(req,res)=>{
     const user = await User.findById(req.user._id);
 
     if(!user){
-       res.status(401).json({
+      return res.status(404).json({
         success:false,
         message:"user not found"
       })
@@ -150,7 +150,7 @@ export const updateUser = async(req,res)=>{
     const updatedUser  = await user.save()
 
     res.status(201).json({
-      success:false,
+      success:true,
       user:updatedUser
     })
 
