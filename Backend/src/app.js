@@ -4,6 +4,7 @@ import cors from "cors"
 import cookieParser  from "cookie-parser";
 import morgan from "morgan";
 import authRoutes from "./routes/auth.routes.js"
+import productRoutes from "./routes/product.Routes.js"
 const app = express()
 
 
