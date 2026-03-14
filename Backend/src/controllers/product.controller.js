@@ -63,3 +63,67 @@ export const createProduct = async(req,res)=>{
         res.status(500).json({ success: false, message: "Server error" });
     }
 }
+
+
+export const createReview  = async(req,res)=>{
+    try {
+        const {rating , comment} = req.body
+
+        if(!rating || rating < 1 || rating > 5){
+            return res.status(400).json({
+               success:false,
+               message:"Rating must be between 1 and 5"
+            })
+        }
+
+        if(!comment || comment.trim() === ""){
+            return res.status(400).json({
+                success:false,
+                message:"Comment is required"
+            })
+        }
+
+        const product = await Product.findById(req.params.id)
+
+        if(!product){
+             return res.status(404).json({message:"Product not found"})
+        }
+
+        const alreadyReviewed = product.reviews.find(
+            (r)=> r.user.toString() === req.user._id.toString()
+        )
+
+        if(alreadyReviewed){
+              return res.status(400).json({
+              success: false,
+               message: "You already reviewed this product",
+            });
+        }
+
+        const review  = {
+            user:req.user._id,
+            name:req.user.name,
+            rating:Number(rating),
+            comment 
+        }
+        
+        product.reviews.push(review)
+
+        product.numReviews  = product.reviews.length
+
+        product.rating = (
+            product.reviews.reduce((acc, item) => acc + item.rating, 0) /
+            product.reviews.length
+            ).toFixed(1);
+
+
+        await product.save()
+            res.status(201).json({
+            success:true,
+            message:"Review added"
+        })
+
+    } catch (error) {
+        res.status(500).json({message:"Server error"})
+    }
+}
