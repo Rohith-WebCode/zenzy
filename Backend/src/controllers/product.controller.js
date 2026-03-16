@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import cloudinary from "../config/cloudinary.js";
 import Product from "../models/productSchema.js";
 import streamifier from "streamifier";
@@ -181,3 +182,33 @@ export const getProducts = async (req, res) => {
     });
   }
 };
+
+export const getProductById = async(req,res) => {
+  try {
+    const product = await Product.findById(req.params.id);
+
+    if(!mongoose.Types.ObjectId.isValid(req.params.id)){
+        return res.status(400).json({
+        success: false,
+        message: "Invalid product ID",
+      });
+    }
+
+    if(!product){
+     return res.status(404).json({
+        success:false,
+        message:"Product not found"
+      })
+    }
+
+      res.status(200).json({
+      success: true,
+      product
+    });
+  } catch (error) {
+      res.status(200).json({
+      success: false,
+      message: "Server error"
+    });
+  }
+}
