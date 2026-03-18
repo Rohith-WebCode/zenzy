@@ -242,3 +242,58 @@ export const deleteProduct = async(req,res) =>{
   })
   }
 }
+
+export const updateProduct = async(req,res) =>{
+  try {
+
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    return res.status(400).json({
+      success: false,
+      message: "Invalid product ID",
+    });
+  }
+
+
+    const product = await Product.findById(req.params.id);
+    
+    if(!product){
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+   product.name = req.body.name || product.name
+   product.price = req.body.price ?? product.price
+   product.description = req.body.description || product.description;
+   product.category = req.body.category || product.category;
+   product.brand = req.body.brand || product.brand;
+   product.stock = req.body.stock ?? product.stock
+
+    if (req.file) {
+          if (product.image?.length > 0) {
+            const publicId = product.image[0]
+              .split("/")
+              .slice(-2)
+              .join("/")
+              .split(".")[0];
+            await cloudinary.uploader.destroy(publicId);
+          }
+
+          const result = await uploadToCloudinary(req.file.buffer, "products");
+          product.image = [result.secure_url]; 
+        }
+
+    const updatedProduct = await product.save();
+
+      res.status(200).json({
+        success: true,
+        message: "Product updated successfully",
+        product: updatedProduct,
+      });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ 
+       success: false, 
+      message: "Server error" 
+    });
+  }
+}

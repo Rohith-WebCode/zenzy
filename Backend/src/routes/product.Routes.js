@@ -1,5 +1,5 @@
 import express from "express";
-import { createProduct,createReview,getProducts,getProductById,deleteProduct} from "../controllers/product.controller.js";
+import { createProduct,createReview,getProducts,getProductById,deleteProduct,updateProduct} from "../controllers/product.controller.js";
 import upload from "../middlewares/upload.js";
 import { userProtect } from "../middlewares/userProtect.js";
 import { admin } from "../middlewares/adminProtect.js";
@@ -11,5 +11,6 @@ router.post("/products/:id/reviews",userProtect,createReview)
 router.get("/products",getProducts)
 router.get("/products/:id",getProductById)
 router.delete("/products/:id",userProtect,admin,deleteProduct)
+router.put("/products/:id",userProtect,admin,upload.single("image"),updateProduct)
 
 export default router;
