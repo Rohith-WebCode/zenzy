@@ -12,5 +12,6 @@ router.get("/products",getProducts)
 router.get("/products/:id",getProductById)
 router.delete("/products/:id",userProtect,admin,deleteProduct)
 router.put("/products/:id",userProtect,admin,upload.single("image"),updateProduct)
+router.get("/products/top", getTopProducts);
 
 export default router;

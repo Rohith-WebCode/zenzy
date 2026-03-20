@@ -297,3 +297,25 @@ export const updateProduct = async(req,res) =>{
     });
   }
 }
+
+export const getTopProducts  = async(req,res) =>{
+  try {
+    const limit  = Number(req.params.limit) || 5
+   const products = await Product.find({})
+      .select("name price image rating numReviews")
+      .sort({ rating: -1 })
+      .limit(limit);
+
+    res.status(200).json({
+      success: true,
+      count: products.length,
+      products
+    });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      message: "Server error"
+    });
+  }
+};
